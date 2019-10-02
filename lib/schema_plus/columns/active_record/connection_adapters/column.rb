@@ -21,7 +21,7 @@ module SchemaPlus::Columns
         # Returns nil if the column is not in a unique index.
         def unique_scope
           if index = indexes.
-                       select{|i| i.unique && i.where.blank?}.
+                       select{|i| i.unique && i.where.blank? && !i.columns.is_a?(String)}.
                        sort_by{|i| i.columns.size}.
                        first
             index.columns.reject{|name| name == self.name}
@@ -31,7 +31,7 @@ module SchemaPlus::Columns
         # Returns true if the column is in a unique index.  See also
         # unique_scope
         def unique?
-          indexes.any?{|i| i.unique && i.where.blank?}
+          indexes.any?{|i| i.unique && i.where.blank? && !i.columns.is_a?(String)}
         end
 
         # Returns true if the column is in one or more indexes that are
